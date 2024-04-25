@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@picocss/pico@2/css/pico.pumpkin.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@picocss/pico@2/css/pico.colors.min.css">
+    <link rel="stylesheet" href="./css/style.css">
+    <meta name="color-scheme" content="light dark">
+    <title>Jogadores</title>
+</head>
+
+<body>
+
+    <main class="container">
+        <nav>
+            <ul>
+                <li>
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
+                        stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+                        class="lucide lucide-trophy">
+                        <path d="M6 9H4.5a2.5 2.5 0 0 1 0-5H6" />
+                        <path d="M18 9h1.5a2.5 2.5 0 0 0 0-5H18" />
+                        <path d="M4 22h16" />
+                        <path d="M10 14.66V17c0 .55-.47.98-.97 1.21C7.85 18.75 7 20.24 7 22" />
+                        <path d="M14 14.66V17c0 .55.47.98.97 1.21C16.15 18.75 17 20.24 17 22" />
+                        <path d="M18 2H6v7a6 6 0 0 0 12 0V2Z" />
+                    </svg>
+                    <strong>Jogadores</strong>
+                </li>
+            </ul>
+            <ul>
+                <li><a href="index.html">Lista</a></li>
+                <li><a href="cadastrar.html">Cadastrar</a></li>
+            </ul>
+        </nav>
+
+        <section>
+
+            <article class="data">
+                <div id="jogadores-list"></div>
+            </article>
+
+        </section>
+    </main>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            var jogadores = JSON.parse(localStorage.getItem('jogadores')) || [];
+
+            var jogadoresListContainer = document.getElementById('jogadores-list');
+
+            if (jogadores.length === 0) {
+                jogadoresListContainer.innerHTML = "<p>Nenhum jogador cadastrado.</p>";
+            } else {
+                var jogadoresHTML = jogadores.map(function(jogador) {
+                    return `
+                    <div>
+                        <img src="${jogador.foto}" alt="foto do jogador" class="avatar">
+                        <h3>${jogador.nome}</h3>
+                        <p class="row">${jogador.time}</p>
+                        <p class="row">${jogador.gols} gols</p>
+                        <p class="row">${jogador.assistencias} assistências</p>
+                        <button class="pico-background-pink-600 delete-btn">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
+                                fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                stroke-linejoin="round" class="lucide lucide-trash">
+                                <path d="M3 6h18" />
+                                <path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6" />
+                                <path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2" />
+                            </svg>
+                            apagar
+                        </button>
+                    </div>
+                    `;
+                }).join("");
+
+                jogadoresListContainer.innerHTML = jogadoresHTML;
+            }
+
+            // Adicionar evento de clique para os botões de exclusão
+            var deleteButtons = document.querySelectorAll('.delete-btn');
+            deleteButtons.forEach(function(button, index) {
+                button.addEventListener('click', function() {
+                    // Remover o jogador do array
+                    jogadores.splice(index, 1);
+                    // Atualizar o localStorage
+                    localStorage.setItem('jogadores', JSON.stringify(jogadores));
+                    // Atualizar a lista na página
+                    jogadoresHTML = jogadores.map(function(jogador) {
+                        return `
+                        <div>
+                            <img src="${jogador.foto}" alt="foto do jogador" class="avatar">
+                            <h3>${jogador.nome}</h3>
+                            <p class="row">${jogador.time}</p>
+                            <p class="row">${jogador.gols} gols</p>
+                            <p class="row">${jogador.assistencias} assistências</p>
+                            <button class="pico-background-pink-600 delete-btn">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
+                                    fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                    stroke-linejoin="round" class="lucide lucide-trash">
+                                    <path d="M3 6h18" />
+                                    <path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6" />
+                                    <path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2" />
+                                </svg>
+                                apagar
+                            </button>
+                        </div>
+                        `;
+                    }).join("");
+                    jogadoresListContainer.innerHTML = jogadoresHTML;
+                });
+            });
+        });
+    </script>
+</body>
+
+</html>
